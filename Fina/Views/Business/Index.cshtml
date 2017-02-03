@@ -1,0 +1,127 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<div ng-controller="BusinessCtrl" ng-init="init()">
+    <md-toolbar class="md-table-toolbar alternate" ng-show="options.rowSelection && selected.length">
+        <div class="md-toolbar-tools">
+            <span>{{selected.length}} {{selected.length > 1 ? 'items' : 'item'}} selected</span>
+            <span flex></span>
+            <md-button ng-click="delete(selected)" class="md-icon-button">
+                <md-icon>delete</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <!-- exact table from live demo -->
+    <md-table-container>
+        <table md-table md-row-select="options.rowSelection" multiple="{{options.multiSelect}}" ng-model="selected" md-progress="promise">
+            <thead md-head md-order="query.order" md-on-reorder="getDesserts">
+                <tr md-row x-md-auto-select="options.autoSelect">
+                    <th md-column>
+                        
+                    </th>
+                    <th md-column md-numeric ><span>Valor</span></th>
+                    <th md-column md-order-by="Category"><span>Categoria</span></th>
+                    <th md-column><span>Data</span></th>
+                    <th md-column>Observação</th>
+                    <th md-column>Tipo</th>
+                </tr>
+            </thead>
+            <tbody md-body>
+                <tr  md-row md-select="b" md-select-id="name"md-auto-select="options.autoSelect" ng-repeat="b in business   ">
+                    <td md-cell>
+                        <md-button ng-click="showAdvanced($event, b)" class="md-icon-button">
+                            <md-icon>mode_edit</md-icon>
+                        </md-button>
+                    </td>
+                    <td md-cell>{{b.Value | number: 2}}</td>
+                    <td md-cell>{{b.Category}}</td>
+                    <td md-cell>{{b.Date | date : 'dd/MM/yyyy'}}</td>
+                    <td md-cell>{{b.Type | types}}</td>
+                    <td md-cell>{{b.Observation}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+
+    <md-button class="md-fab md-fab-bottom-right docs-scroll-fab md-button md-ink-ripple scrolling" ng-click="showAdvanced($event)" aria-label="More">
+        +
+    </md-button>
+    
+    <script type="text/ng-template" id="create.html">
+            <md-dialog aria-label="Criar">
+                <form name="FormBusiness" ng-cloak>
+                    <md-toolbar>
+                        <div class="md-toolbar-tools">
+                            <h2>{{text}}</h2>
+                            <span flex></span>
+                        </div>
+                    </md-toolbar>
+
+                    <md-dialog-content>
+                        <div class="md-dialog-content">
+                            <div layout="row">
+                                <md-input-container flex="100">
+                                    <label>Valor</label>
+                                    <input required="" type="number" name="value" ng-model="business.Value">
+                                    <div ng-messages="FormBusiness.Value.$error">
+                                        <div ng-message="required">Campo Obrigatório.</div>
+                                    </div>
+                                </md-input-container>
+                                <md-input-container flex="50">
+                                    <md-datepicker class="business_datepicker" ng-model="business.Date"
+                                                   flex="100"
+                                                   md-placeholder="Data"
+                                                   is-open="dateFromOpened"
+                                                   ng-click="dateFromOpened = true"
+                                                   ng-change="gridActions.filter()" required>
+                                    </md-datepicker>
+                                    <div ng-messages="FormBusiness.Date.$error">
+                                        <div ng-message="required">Campo Obrigatório.</div>
+                                    </div>
+                                </md-input-container>
+                            </div>
+                            <div layout="row">
+                                <md-input-container flex="50">
+                                    <label>Categoria</label>
+                                    <input required=""  name="category" ng-model="business.Category">
+                                    <div ng-messages="FormBusiness.Category.$error">
+                                        <div ng-message="required">Campo Obrigatório.</div>
+                                    </div>
+                                </md-input-container>
+                                <md-input-container style="margin-right: 10px;" flex="50">
+                                    <label>Tipo</label>
+                                    <md-select ng-model="business.Type" required>
+                                        <md-option ng-repeat="type in types" value="{{type.id}}">{{type.name}}</md-option>
+                                    </md-select>
+                                    <div ng-messages="FormBusiness.Type.$error">
+                                        <div ng-message="required">Campo Obrigatório.</div>
+                                    </div>
+                                </md-input-container>
+                            </div>
+                            <div layout="row">
+                                <md-input-container flex="100">
+                                    <label>Obeservação</label>
+                                    <input required="" name="observation" ng-model="business.Observation">
+                                    <div ng-messages="FormBusiness.Observation.$error">
+                                        <div ng-message="required">Campo Obrigatório.</div>
+                                    </div>
+                                </md-input-container>
+                            </div>
+                            </div>
+                    </md-dialog-content>
+
+                    <md-dialog-actions layout="row">
+                        <span flex></span>
+                        <md-button ng-show="isEdit" ng-click="edit(business)">
+                            Salvar
+                        </md-button>
+                        <md-button ng-show="!isEdit" ng-click="save(business)">
+                            Salvar
+                        </md-button>
+                    </md-dialog-actions>
+                </form>
+            </md-dialog>
+    </script>
+</div>
